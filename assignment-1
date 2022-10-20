@@ -1,0 +1,121 @@
+[root@ip-172-31-10-208 ec2-user]# ls
+example-voting-app
+[root@ip-172-31-10-208 ec2-user]# cd example-voting-app
+[root@ip-172-31-10-208 example-voting-app]# ls -lrth
+total 96K
+drwxr-xr-x 5 root root  133 Oct 20 10:51 result
+-rw-r--r-- 1 root root 2.2K Oct 20 10:51 README.md
+-rw-r--r-- 1 root root  185 Oct 20 10:51 MAINTAINERS
+-rw-r--r-- 1 root root  11K Oct 20 10:51 LICENSE
+drwxr-xr-x 2 root root  250 Oct 20 10:51 k8s-specifications
+-rw-r--r-- 1 root root 1.7K Oct 20 10:51 docker-stack.yml
+-rw-r--r-- 1 root root  808 Oct 20 10:51 docker-compose.yml
+-rw-r--r-- 1 root root  400 Oct 20 10:51 docker-compose-simple.yml
+-rw-r--r-- 1 root root  808 Oct 20 10:51 docker-compose-javaworker.yml
+-rw-r--r-- 1 root root  609 Oct 20 10:51 dockercloud.yml
+-rw-r--r-- 1 root root  54K Oct 20 10:51 architecture.png
+drwxr-xr-x 3 root root   70 Oct 20 10:51 worker
+drwxr-xr-x 4 root root   93 Oct 20 10:51 vote
+[root@ip-172-31-10-208 example-voting-app]# cd k8s-specifications
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]# vi vote-service.yaml
+[root@ip-172-31-10-208 k8s-specifications]# vi result-service.yaml
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]# kubectl get all
+NAME                                  READY   STATUS            RESTARTS   AGE
+pod/db-b54cd94f4-n2z2c                0/2     PodInitializing   0          9s
+pod/details-v1-6fc55d65c9-b5z7g       2/2     Running           0          65m
+pod/productpage-v1-7f44c4d57c-t2zdp   2/2     Running           0          65m
+pod/ratings-v1-6f855c5fff-wbf7h       2/2     Running           0          65m
+pod/redis-868d64d78-bp4sq             0/2     PodInitializing   0          9s
+pod/result-5d57b59f4b-wjk7l           0/2     PodInitializing   0          7s
+pod/reviews-v1-54b8794ddf-q78xw       2/2     Running           0          65m
+pod/reviews-v2-c4d6568f9-7znzp        2/2     Running           0          65m
+pod/reviews-v3-7f66977689-wlhlm       2/2     Running           0          65m
+pod/vote-94849dc97-zcz5q              0/2     PodInitializing   0          7s
+pod/worker-dd46d7584-kfvjc            0/2     Init:0/1          0          7s
+
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db            ClusterIP   10.104.60.48     <none>        5432/TCP         9s
+service/details       ClusterIP   10.101.95.46     <none>        9080/TCP         65m
+service/kubernetes    ClusterIP   10.96.0.1        <none>        443/TCP          65m
+service/productpage   ClusterIP   10.111.29.31     <none>        9080/TCP         65m
+service/ratings       ClusterIP   10.111.145.222   <none>        9080/TCP         65m
+service/redis         ClusterIP   10.101.213.226   <none>        6379/TCP         8s
+service/result        NodePort    10.106.222.178   <none>        5001:31003/TCP   8s
+service/reviews       ClusterIP   10.105.148.11    <none>        9080/TCP         65m
+service/vote          NodePort    10.98.98.46      <none>        5000:31002/TCP   8s
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db               0/1     1            0           9s
+deployment.apps/details-v1       1/1     1            1           65m
+deployment.apps/productpage-v1   1/1     1            1           65m
+deployment.apps/ratings-v1       1/1     1            1           65m
+deployment.apps/redis            0/1     1            0           9s
+deployment.apps/result           0/1     1            0           8s
+deployment.apps/reviews-v1       1/1     1            1           65m
+deployment.apps/reviews-v2       1/1     1            1           65m
+deployment.apps/reviews-v3       1/1     1            1           65m
+deployment.apps/vote             0/1     1            0           8s
+deployment.apps/worker           0/1     1            0           8s
+
+NAME                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4                1         1         0       9s
+replicaset.apps/details-v1-6fc55d65c9       1         1         1       65m
+replicaset.apps/productpage-v1-7f44c4d57c   1         1         1       65m
+replicaset.apps/ratings-v1-6f855c5fff       1         1         1       65m
+replicaset.apps/redis-868d64d78             1         1         0       9s
+replicaset.apps/result-5d57b59f4b           1         1         0       8s
+replicaset.apps/reviews-v1-54b8794ddf       1         1         1       65m
+replicaset.apps/reviews-v2-c4d6568f9        1         1         1       65m
+replicaset.apps/reviews-v3-7f66977689       1         1         1       65m
+replicaset.apps/vote-94849dc97              1         1         0       8s
+replicaset.apps/worker-dd46d7584            1         1         0       8s
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+[root@ip-172-31-10-208 k8s-specifications]#
+
+// Obervation:
+voting APP created: ports vote service is 31002 and  result serviec is 31003 ,
+open both webpages http://18.142.104.92:31002/ and http://18.142.104.92:31003/.
+Voting done and observe the result.
+
+Deleted vote POD and no impact observed as pod created again.
+
+[root@ip-172-31-10-208 ~]# kubectl delete po worker-dd46d7584-kfvjc 
+
+// Deleted worker POD and no impact observed as pod created again.
+
+[root@ip-172-31-10-208 ~]# kubectl delete po db-b54cd94f4-n2z2c
+
+
+// when delete DB pod: vote can be given and result page not updating
+worker pod restarted.
+
+
+[root@ip-172-31-10-208 ~]# kubectl delete po result-5d57b59f4b-wjk7l
+pod "result-5d57b59f4b-wjk7l" deleted
+
+
+// the result page not respoding, so gave restart to result pod and results start updating.
+
+
+
+
